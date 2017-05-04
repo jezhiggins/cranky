@@ -5,7 +5,7 @@
 
   <xsl:output method="text"/>
 
-  <xsl:include href="cranky-accessors-xsd.xsl"/>
+  <xsl:include href="cranky-generate-header-xsd.xsl"/>
   <xsl:include href="cranky-member-variables-xsd.xsl"/>
 
   <xsl:template match="/">
@@ -19,26 +19,9 @@
   <xsl:template match="xs:element[xs:complexType]">
     <xsl:variable name="name" select="@name"/>
 
-    class <xsl:value-of select="$name"/>_impl;
-  
-    class <xsl:value-of select="$name"/>
-    {
-      public:
-        <xsl:value-of select="$name"/>();
-        <xsl:value-of select="$name"/>(const <xsl:value-of select="$name"/> rhs);
-        ~<xsl:value-of select="$name"/>();
-
-        <xsl:value-of select="$name"/>&amp; operator=(const <xsl:value-of select="$name"/>&amp; rhs);
-        bool operator==(const <xsl:value-of select="$name"/>&amp; rhs) const;
-
-    <xsl:apply-templates mode="accessors"/>
-
-        void emit_xml(std::ostream&amp; os) const;
-
-      private:
-        void set_impl(<xsl:value-of select="$name"/>_impl* impl);
-        <xsl:value-of select="$name"/>_impl* impl_;
-    } // <xsl:value-of select="@name"/>;
+    <xsl:call-template name="generate-header">
+      <xsl:with-param name="name" select="$name"/>
+    </xsl:call-template>
 
     <xsl:apply-templates/>
   </xsl:template>
@@ -55,6 +38,9 @@
     <xsl:param name="type"/>
     <xsl:choose>
       <xsl:when test="$type = 'xs:string'">
+        <xsl:text>const std::string&amp;</xsl:text>
+      </xsl:when>
+      <xsl:when test="$type = 'xs:ID'">
         <xsl:text>const std::string&amp;</xsl:text>
       </xsl:when>
       <xsl:when test="$type = 'xs:int'">

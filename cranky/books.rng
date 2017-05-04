@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="catalog">
+    <element name="catalog">
+      <ref name="attlist.catalog"/>
+      <oneOrMore>
+        <ref name="book"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="attlist.catalog" combine="interleave">
+    <empty/>
+  </define>
+  <define name="book">
+    <element name="book">
+      <ref name="attlist.book"/>
+      <ref name="author"/>
+      <ref name="title"/>
+      <ref name="genre"/>
+      <ref name="price"/>
+      <ref name="publish_date"/>
+      <ref name="description"/>
+    </element>
+  </define>
+  <define name="attlist.book" combine="interleave">
+    <attribute name="id">
+      <data type="ID"/>
+    </attribute>
+  </define>
+  <define name="author">
+    <element name="author">
+      <ref name="attlist.author"/>
+      <text/>
+    </element>
+  </define>
+  <define name="attlist.author" combine="interleave">
+    <empty/>
+  </define>
+  <define name="title">
+    <element name="title">
+      <ref name="attlist.title"/>
+      <text/>
+    </element>
+  </define>
+  <define name="attlist.title" combine="interleave">
+    <empty/>
+  </define>
+  <define name="genre">
+    <element name="genre">
+      <ref name="attlist.genre"/>
+      <text/>
+    </element>
+  </define>
+  <define name="attlist.genre" combine="interleave">
+    <empty/>
+  </define>
+  <define name="price">
+    <element name="price">
+      <ref name="attlist.price"/>
+      <text/>
+    </element>
+  </define>
+  <define name="attlist.price" combine="interleave">
+    <empty/>
+  </define>
+  <define name="publish_date">
+    <element name="publish_date">
+      <ref name="attlist.publish_date"/>
+      <text/>
+    </element>
+  </define>
+  <define name="attlist.publish_date" combine="interleave">
+    <empty/>
+  </define>
+  <define name="description">
+    <element name="description">
+      <ref name="attlist.description"/>
+      <text/>
+    </element>
+  </define>
+  <define name="attlist.description" combine="interleave">
+    <empty/>
+  </define>
+  <start>
+    <choice>
+      <ref name="catalog"/>
+    </choice>
+  </start>
+</grammar>
