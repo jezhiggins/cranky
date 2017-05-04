@@ -84,11 +84,15 @@
     <xsl:param name="name"/>
     <xsl:param name="type"/>
     <xsl:param name="optional"/>
+    <xsl:param name="multiple"/>
 
     <xsl:text>    </xsl:text>
     <xsl:value-of select="$type"/>
     <xsl:text> get_</xsl:text>
     <xsl:value-of select="$name"/>
+    <xsl:if test="$multiple">
+      <xsl:text>_collection</xsl:text>
+    </xsl:if>
     <xsl:text>() const;
     </xsl:text>
     <xsl:if test="$optional">
@@ -103,21 +107,46 @@
     <xsl:param name="name"/>
     <xsl:param name="type"/>
     <xsl:param name="optional"/>
+    <xsl:param name="multiple"/>
 
-    <xsl:text>    void set_</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$multiple">
+        <xsl:text>    void add_</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>    void set_</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:value-of select="$name"/>
     <xsl:text>(</xsl:text>
+    <xsl:if test="$multiple">
+      <xsl:text>const </xsl:text>
+    </xsl:if>
     <xsl:value-of select="$type"/>
+    <xsl:if test="$multiple">
+      <xsl:text>&amp;</xsl:text>
+    </xsl:if>
     <xsl:text> new_</xsl:text>
     <xsl:value-of select="$name"/>
     <xsl:text>);
     </xsl:text>
-    <xsl:if test="$optional">
-      <xsl:text>    void reset_</xsl:text>
+    <xsl:if test="$multiple">
+      <xsl:text>    void remove_</xsl:text>
       <xsl:value-of select="$name"/>
+      <xsl:text>(int index);
+    </xsl:text>
+    </xsl:if>
+    <xsl:if test="$optional or $multiple">
+      <xsl:text>    void clear_</xsl:text>
+      <xsl:value-of select="$name"/>
+      <xsl:if test="$multiple">
+        <xsl:text>_collection</xsl:text>
+      </xsl:if>
       <xsl:text>();
     </xsl:text>
     </xsl:if>
+    <xsl:text>
+    </xsl:text>
   </xsl:template>
 
 </xsl:stylesheet>
