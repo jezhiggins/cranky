@@ -57,13 +57,7 @@
         <xsl:value-of select="$name"/>&amp; operator=(const <xsl:value-of select="$name"/>&amp; rhs);
         bool operator==(const <xsl:value-of select="$name"/>&amp; rhs) const;
 
-        ///////////////////
-        // getters
-    <xsl:apply-templates mode="get-accessors"/>
-
-        ///////////////////
-        // setters
-    <xsl:apply-templates mode="set-accessors"/>
+    <xsl:apply-templates mode="accessors"/>
 
         void emit_xml(std::ostream&amp; os) const;
 

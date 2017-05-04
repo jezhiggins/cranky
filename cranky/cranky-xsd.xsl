@@ -36,12 +36,17 @@
 
   <xsl:template name="simple-type-lookup">
     <xsl:param name="type"/>
+    <xsl:param name="no-cv-qualifiers"/>
     <xsl:choose>
-      <xsl:when test="$type = 'xs:string'">
-        <xsl:text>const std::string&amp;</xsl:text>
-      </xsl:when>
-      <xsl:when test="$type = 'xs:ID'">
-        <xsl:text>const std::string&amp;</xsl:text>
+      <xsl:when test="$type = 'xs:string' or $type = 'xs:ID'">
+        <xsl:choose>
+          <xsl:when test="$no-cv-qualifiers">
+            <xsl:text>std::string</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>const std::string&amp;</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
       <xsl:when test="$type = 'xs:int'">
         <xsl:text>int</xsl:text>

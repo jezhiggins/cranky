@@ -11,11 +11,13 @@
 
   <xsl:template match="xs:element[@type]|xs:element[xs:complexType]|xs:attribute" mode="accessors">
     <xsl:variable name="optional" select="@minOccurs = '0' and (not(@maxOccurs) or (@maxOccurs = '1'))"/>
+    <xsl:variable name="multiple" select="@maxOccurs"/>
     <xsl:variable name="type">
       <xsl:choose>
         <xsl:when test="@type">
           <xsl:call-template name="simple-type-lookup">
             <xsl:with-param name="type" select="@type"/>
+            <xsl:with-param name="no-cv-qualifiers" select="$multiple"/>
           </xsl:call-template>          
         </xsl:when>
         <xsl:when test="xs:complexType">
@@ -33,6 +35,7 @@
       <xsl:with-param name="name" select="@name"/>
       <xsl:with-param name="type" select="$type"/>
       <xsl:with-param name="optional" select="$optional"/>
+      <xsl:with-param name="multiple" select="$multiple"/>
     </xsl:call-template>
   </xsl:template>
 
@@ -48,16 +51,32 @@
     <xsl:param name="name"/>
     <xsl:param name="type"/>
     <xsl:param name="optional"/>
+    <xsl:param name="multiple"/>
+
+    <xsl:variable name="true-type">
+      <xsl:choose>
+        <xsl:when test="$multiple">
+          <xsl:text>const std::vector&lt;</xsl:text>
+          <xsl:value-of select="$type"/>
+          <xsl:text>&gt;&amp;</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$type"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
 
     <xsl:call-template name="make-get-accessors">
       <xsl:with-param name="name" select="$name"/>
-      <xsl:with-param name="type" select="$type"/>
+      <xsl:with-param name="type" select="$true-type"/>
       <xsl:with-param name="optional" select="$optional"/>
+      <xsl:with-param name="multiple" select="$multiple"/>
     </xsl:call-template>
     <xsl:call-template name="make-set-accessors">
       <xsl:with-param name="name" select="$name"/>
       <xsl:with-param name="type" select="$type"/>
       <xsl:with-param name="optional" select="$optional"/>
+      <xsl:with-param name="multiple" select="$multiple"/>
     </xsl:call-template>
   </xsl:template>
 
